@@ -1,0 +1,53 @@
+.navbar {
+  width: 100vw;
+  height: 10vh;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &__links {
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+  }
+  &__logo {
+    padding-left: 1.5rem;
+    font-size: 30px;
+    font-weight: 500;
+    color: #e2a376;
+  }
+  a {
+    text-decoration: none;
+  }
+  .btn {
+    background-image: linear-gradient(
+      90deg,
+      #fe0074 4.69%,
+      #9d47ff 49.86%,
+      #20bffc
+    );
+    &:hover {
+      box-shadow: 0 2px 33px rgb(255 0 115 / 50%);
+    }
+    color: white;
+    font-weight: 500;
+    border: none;
+
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  .connect {
+    background-image: linear-gradient(
+      90deg,
+      #d78237 4.69%,
+      #e0b495,
+      #e43707 90.86%
+    );
+    font-weight: 500;
+    color: black;
+  }
+}
