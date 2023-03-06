@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./home.module.scss";
+import styles from "./index.module.scss";
 // import { ReactComponent as Homee } from "../../assets/Frame 6.svg";
 import Image from "next/image";
 

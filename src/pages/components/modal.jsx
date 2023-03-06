@@ -162,7 +162,7 @@ const FormModal = () => {
               id="name"
               className={styles.main_content_form_input}
               placeholder="0"
-              onChange={(e) => setInitflow(e.target.value)}
+              onChange={(e) => setInitflow(e.target.value * 1000000000)}
             />
           </div>
 
@@ -204,8 +204,8 @@ const FormModal = () => {
               nftId,
               nftName,
               tokenUri,
-              "10",
-              "2",
+              initfee.toString(),
+              initflow.toString(),
               nftChainName
             );
             console.log(res);

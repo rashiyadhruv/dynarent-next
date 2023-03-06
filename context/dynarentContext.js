@@ -94,7 +94,7 @@ export const DynarentProvider = ({ children }) => {
   const listToMarketplace = async (
     _nftHash,
     _nftAddress,
-    _nftId,
+    _tokenId,
     _nftName,
     _tokenUri,
     _price,
@@ -104,8 +104,8 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
       // const provider = new ethers.providers.Web3Provider(connection);
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
       const signer = await web3Provider.getSigner();
       console.log(signer);
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
@@ -113,7 +113,7 @@ export const DynarentProvider = ({ children }) => {
       const txRes = await contract.listToMarketplace(
         _nftHash,
         _nftAddress,
-        _nftId,
+        _tokenId,
         _nftName,
         _tokenUri,
         _price,
@@ -135,15 +135,15 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
 
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-
+      console.log("calling", contract, _nftHash, _renter);
       const txRes = await contract.rent(_nftHash, _renter, {
         gasLimit: 5000000,
       });
-
+      console.log("feeeeeeeeee", txRes);
       setLoading(true);
       await txRes.wait(1);
       setLoading(false);
@@ -156,8 +156,8 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
 
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 
@@ -177,10 +177,10 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
 
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, web3Provider);
 
       const txRes = await contract.getMarketplaceNfts();
 
@@ -195,14 +195,14 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
 
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, web3Provider);
+      console.log("weee", _renter);
       const txRes = await contract.getMyRentedNfts(_renter);
+      console.log("deeeeeee", txRes);
 
-      console.log(txRes);
       setMyRentedNfts(txRes);
       return txRes;
     }
@@ -212,10 +212,10 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
 
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, web3Provider);
 
       const txRes = await contract.getNftDetailsByHash(_nftHash);
 
@@ -229,10 +229,10 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
 
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, web3Provider);
 
       const txRes = await contract.verify(_nftHash, _renter);
 
@@ -246,10 +246,10 @@ export const DynarentProvider = ({ children }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      const web3Provider = await new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
 
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, web3Provider);
 
       const txRes = await contract.getOwner();
 

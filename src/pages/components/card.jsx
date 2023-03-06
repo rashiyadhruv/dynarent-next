@@ -39,7 +39,7 @@ const Card = ({ handleSetState, nftData }) => {
       console.log(nftData?.tokenUri);
       let urll = "";
       urll = nftData?.tokenUri;
-      if (urll !== "" || urll !== null) {
+      if (urll !== "" && urll !== null) {
         if (urll?.toString().split(0, 4) === "https") {
           const result = await axios(`${nftData?.tokenUri}`);
           setApiResult(result);
@@ -63,23 +63,25 @@ const Card = ({ handleSetState, nftData }) => {
   }, []);
 
   return (
-    <div className={styles.main}>
-      <Image
-        src={image}
-        alt="Shoes"
-        className={styles.main_image}
-        width={100}
-        height={100}
-      />
+    <>
+      {path === "/yourassets" ? (
+        <div className={styles.main}>
+          <Image
+            src={image}
+            alt="Shoes"
+            className={styles.main_image}
+            width={100}
+            height={100}
+          />
 
-      <div className={styles.main_info}>
-        <p>Name: {nftData.tokenName ? nftData.tokenName : nftData.nftName}</p>
-        <p>Description: {apiResult.data?.description}</p>
-        <p>TokenId: {nftData.tokenId}</p>
-        <p>Chain: {nftData.chainName}</p>
-        {path !== "/rentednfts" && (
-          <div className={styles.main_btnwrp}>
-            {path === "/yourassets" ? (
+          <div className={styles.main_info}>
+            <p>
+              Name: {nftData.tokenName ? nftData.tokenName : nftData.nftName}
+            </p>
+            <p>Description: {apiResult.data?.description}</p>
+            <p>TokenId: {nftData.tokenId}</p>
+            <p>Chain: {nftData.chainName}</p>
+            <div className={styles.main_btnwrp}>
               <button
                 className={styles.main_btn}
                 onClick={() => {
@@ -96,20 +98,51 @@ const Card = ({ handleSetState, nftData }) => {
               >
                 LIST
               </button>
-            ) : (
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.main2}>
+          <Image
+            src={image}
+            alt="Shoes"
+            className={styles.main_image}
+            width={100}
+            height={100}
+          />
+          <div className={styles.main_info}>
+            <p>
+              Name: {nftData.tokenName ? nftData.tokenName : nftData.nftName}
+            </p>
+            <p>Description: {apiResult.data?.description}</p>
+            <p>TokenId: {nftData?.nftId}</p>
+            <p>Chain: {nftData?.chainName}</p>
+            <p>Init Price: {nftData?.price.toString()}</p>
+            <p>
+              Init Flow:{" "}
+              {(parseInt(nftData?.duration.toString()) / 1000000000)
+                .toFixed(9)
+                .toString()}
+            </p>
+            <p>
+              Owner: {nftData?.owner.toString().slice(0, 6)}...
+              {nftData?.owner.toString().slice(-5)}
+            </p>
+            <div className={styles.main_btnwrp}>
               <button
                 className={styles.main_btn}
                 onClick={async () => {
-                  handleModal();
+                  console.log(nftData?.nftHash);
+                  rent(nftData?.nftHash, currentAccount);
                 }}
               >
                 RENT
               </button>
-            )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
