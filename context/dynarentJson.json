@@ -32,12 +32,17 @@
         },
         {
           "internalType": "uint256",
-          "name": "_price",
+          "name": "_flowrate",
           "type": "uint256"
         },
         {
+          "internalType": "uint16",
+          "name": "_typeOfIncrease",
+          "type": "uint16"
+        },
+        {
           "internalType": "uint256",
-          "name": "_duration",
+          "name": "_attribute",
           "type": "uint256"
         },
         {
@@ -70,27 +75,96 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
       "inputs": [
         {
+          "indexed": true,
+          "internalType": "string",
+          "name": "nftHash",
+          "type": "string"
+        },
+        {
+          "indexed": false,
           "internalType": "address",
-          "name": "_user",
+          "name": "owner",
           "type": "address"
         },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "chainName",
+          "type": "string"
+        }
+      ],
+      "name": "ListToMarketplace",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "nftHash",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "lender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "renter",
+          "type": "address"
+        }
+      ],
+      "name": "Rented",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "nftHash",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "renter",
+          "type": "address"
+        }
+      ],
+      "name": "Returned",
+      "type": "event"
+    },
+    {
+      "inputs": [
         {
           "internalType": "string",
           "name": "_nftHash",
           "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
         }
       ],
       "name": "returnNft",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
-    },
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
     },
     {
       "stateMutability": "payable",
@@ -138,18 +212,33 @@
             },
             {
               "internalType": "uint256",
-              "name": "price",
+              "name": "initFlowrate",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
-              "name": "duration",
+              "name": "typeOfIncrease",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "attribute",
               "type": "uint256"
             },
             {
               "internalType": "string",
               "name": "chainName",
               "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isListed",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isRented",
+              "type": "bool"
             }
           ],
           "internalType": "struct NFTRent.NftData[]",
@@ -171,9 +260,71 @@
       "name": "getMyRentedNfts",
       "outputs": [
         {
-          "internalType": "string[]",
+          "components": [
+            {
+              "internalType": "string",
+              "name": "nftHash",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "nftAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "nftId",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "nftName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tokenUri",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "initFlowrate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "typeOfIncrease",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "attribute",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "chainName",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isListed",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isRented",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct NFTRent.NftData[]",
           "name": "",
-          "type": "string[]"
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",
@@ -223,18 +374,33 @@
             },
             {
               "internalType": "uint256",
-              "name": "price",
+              "name": "initFlowrate",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
-              "name": "duration",
+              "name": "typeOfIncrease",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "attribute",
               "type": "uint256"
             },
             {
               "internalType": "string",
               "name": "chainName",
               "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isListed",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isRented",
+              "type": "bool"
             }
           ],
           "internalType": "struct NFTRent.NftData",
@@ -261,25 +427,6 @@
     {
       "inputs": [
         {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "name": "isListedMarketplace",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "address",
           "name": "",
           "type": "address"
@@ -295,6 +442,80 @@
         {
           "internalType": "bool",
           "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "marketplaceNfts",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "nftHash",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "nftAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "nftId",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "nftName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "tokenUri",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initFlowrate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "typeOfIncrease",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "attribute",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "chainName",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "isListed",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "isRented",
           "type": "bool"
         }
       ],
@@ -348,18 +569,33 @@
         },
         {
           "internalType": "uint256",
-          "name": "price",
+          "name": "initFlowrate",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "duration",
+          "name": "typeOfIncrease",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "attribute",
           "type": "uint256"
         },
         {
           "internalType": "string",
           "name": "chainName",
           "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "isListed",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "isRented",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -382,8 +618,63 @@
       "outputs": [
         {
           "internalType": "string",
-          "name": "",
+          "name": "nftHash",
           "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "nftAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "nftId",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "nftName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "tokenUri",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initFlowrate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "typeOfIncrease",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "attribute",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "chainName",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "isListed",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "isRented",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -431,18 +722,33 @@
         },
         {
           "internalType": "uint256",
-          "name": "price",
+          "name": "initFlowrate",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "duration",
+          "name": "typeOfIncrease",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "attribute",
           "type": "uint256"
         },
         {
           "internalType": "string",
           "name": "chainName",
           "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "isListed",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "isRented",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",

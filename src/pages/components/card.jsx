@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import DynarentContext from "../../../context/dynarentContext";
 
-const Card = ({ handleSetState, nftData }) => {
+const Card = ({ handleSetState, nftData, type }) => {
   const {
     toggleModal,
     setNftDescription,
@@ -24,6 +24,7 @@ const Card = ({ handleSetState, nftData }) => {
     setNftChainName,
     currentAccount,
     rent,
+    returnNft,
   } = useContext(DynarentContext);
 
   const router = useRouter();
@@ -117,27 +118,39 @@ const Card = ({ handleSetState, nftData }) => {
             <p>Description: {apiResult.data?.description}</p>
             <p>TokenId: {nftData?.nftId}</p>
             <p>Chain: {nftData?.chainName}</p>
-            <p>Init Price: {nftData?.price.toString()}</p>
             <p>
-              Init Flow:{" "}
-              {(parseInt(nftData?.duration.toString()) / 1000000000)
-                .toFixed(9)
-                .toString()}
+              Init Flowrate:{" "}
+              {nftData?.initFlowrate?.toNumber() / (1000000000).toFixed(9)}
             </p>
+            <p>Attribute in focus: Durablity </p>
+            <p>Init Attribute Value: {nftData?.attribute?.toNumber()}</p>
+
             <p>
               Owner: {nftData?.owner.toString().slice(0, 6)}...
               {nftData?.owner.toString().slice(-5)}
             </p>
             <div className={styles.main_btnwrp}>
-              <button
-                className={styles.main_btn}
-                onClick={async () => {
-                  console.log(nftData?.nftHash);
-                  rent(nftData?.nftHash, currentAccount);
-                }}
-              >
-                RENT
-              </button>
+              {type === "1" ? (
+                <button
+                  className={styles.main_btn}
+                  onClick={async () => {
+                    console.log("dfdfdf", nftData?.nftHash);
+                    await rent(nftData?.nftHash, currentAccount);
+                  }}
+                >
+                  RENT
+                </button>
+              ) : (
+                <button
+                  className={styles.main_btn}
+                  onClick={async () => {
+                    console.log("dfdfdf", nftData?.nftHash, currentAccount);
+                    await returnNft(nftData?.nftHash, currentAccount);
+                  }}
+                >
+                  RETURN
+                </button>
+              )}
             </div>
           </div>
         </div>

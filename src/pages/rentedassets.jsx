@@ -14,31 +14,37 @@ const Rentedassets = () => {
     connectWallet,
     getMarketplaceNfts,
     getMyRentedNfts,
-    RentedNfts,
+    rentedNfts,
+    
   } = useContext(DynarentContext);
 
   useEffect(() => {
-    console.log("helloooooooo", currentAccount);
-    if (currentAccount === "") {
-      connectWallet();
-    } else {
-      getMyRentedNfts(currentAccount);
-    }
+    const fet = async () => {
+      console.log("helloooooooo", currentAccount);
+      if (currentAccount === "") {
+        connectWallet();
+      } else {
+        let ans = await getMyRentedNfts(currentAccount);
+        console.log("ans", ans);
+      }
+    };
+    fet();
+    console.log("qwwwwwewewewe", rentedNfts);
   }, [currentAccount]);
 
   return (
     <div className={styles.marketplace}>
-      {console.log("marketplaceNfts", RentedNfts)}
-      {/* {RentedNfts.map((nft, index) => (
+      {console.log("marketplaceNfts", rentedNfts)}
+      {rentedNfts.map((nft, index) => (
         <Card
           handleSetState={() => {
             setCardId(index);
           }}
           nftData={nft}
           key={index}
+          type="2"
         />
-      ))} */}{" "}
-      heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+      ))}{" "}
     </div>
   );
 };

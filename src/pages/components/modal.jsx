@@ -12,8 +12,8 @@ const FormModal = () => {
   const [noofdays, setNoofdays] = useState(0);
   const [attributeinfocus, setAttributeinfocus] = useState("");
   const [initflow, setInitflow] = useState(0);
-  const [typeofinc, setTypeofinc] = useState("linear");
-
+  const [typeofinc, setTypeofinc] = useState("1");
+  const [attvalue, setAttvalue] = useState(0);
   const [flag, setFlag] = useState(false);
   const {
     toggleModal,
@@ -36,6 +36,7 @@ const FormModal = () => {
       const data = await axios.get(tokenUri);
       setAttributes(data?.data?.attributes);
       console.log(data?.data?.attributes);
+      setAttvalue(data?.data?.attributes[1]?.value);
     };
     func();
   }, []);
@@ -181,12 +182,12 @@ const FormModal = () => {
               onChange={(e) => {
                 setTypeofinc(e.target.value);
               }}
-              defaultValue="linear"
+              defaultValue="1"
             >
-              <option value="constant">Constant</option>
-              <option value="linear">Linear</option>
-              <option value="exponential">Exponential</option>
-              <option value="logarithmic">Logarithmic</option>
+              <option value="0">Constant</option>
+              <option value="1">Linear</option>
+              <option value="2">Exponential</option>
+              <option value="3">Logarithmic</option>
             </select>
           </div>
         </div>
@@ -204,8 +205,9 @@ const FormModal = () => {
               nftId,
               nftName,
               tokenUri,
-              initfee.toString(),
-              initflow.toString(),
+              parseInt(initflow),
+              parseInt(typeofinc),
+              parseInt(attvalue),
               nftChainName
             );
             console.log(res);
