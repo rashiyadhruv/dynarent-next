@@ -76,7 +76,7 @@
     },
     {
       "inputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "constructor"
     },
     {

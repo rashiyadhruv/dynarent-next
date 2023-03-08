@@ -7,7 +7,7 @@ import { EvmChain } from "@moralisweb3/common-evm-utils";
 import ContractJson from "./dynarentJson.json";
 
 const abi = ContractJson.abi;
-const CONTRACT_ADDRESS = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
+const CONTRACT_ADDRESS = "0x31dA905e778FC5731c9ff858347E51111f8800D4";
 const MORALIS_API_KEY =
   "ea7RIctgYCrticyh409mE0xSQi8nby1hsbLkL4zfopadb6ett7i6mPTDfAeHRSRD";
 
@@ -15,7 +15,6 @@ export const DynarentContext = React.createContext();
 
 export const DynarentProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
-
   const [modal, setModal] = useState(false);
   const [cardId, setCardId] = useState(1);
   const [loading, setLoading] = useState(false);

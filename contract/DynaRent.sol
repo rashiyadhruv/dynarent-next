@@ -11,7 +11,7 @@ contract NFTRent {
 
     address payable owner;
 
-    constructor() {
+    constructor() payable {
         owner = payable(msg.sender);
     }
 
@@ -42,7 +42,6 @@ contract NFTRent {
     // My NFTs that I rented to others
     mapping (string => NftData[]) public myNfts;
 
-
     mapping (address => NftData[]) public myRentedNfts;
     mapping (string => NftData) public nftDetails;
 
@@ -59,7 +58,30 @@ contract NFTRent {
     }
 
     function getMarketplaceNfts() external view returns (NftData[] memory) {
-        return marketplaceNfts; // returns array of all the NFTs in the marketplace   ----> array of marketplace NFTs -->
+        uint totalItemCount = marketplaceNfts.length;
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (nftDetails[marketplaceNfts[i].nftHash].isListed == true) {
+                itemCount += 1;
+            }    
+        }
+
+        NftData[] memory items = new NftData[](itemCount);
+
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (nftDetails[marketplaceNfts[i].nftHash].isListed == true) {
+
+                NftData storage currentItem = nftDetails[marketplaceNfts[i].nftHash];
+
+                items[currentIndex] = currentItem;
+
+                currentIndex += 1;
+            }
+        }
+
+        return items;
     }
 
     function rent(string memory _nftHash, address _user) external {
@@ -73,7 +95,36 @@ contract NFTRent {
 
     // rented nfts return an array of all the NFTs rented by an address
     function getMyRentedNfts(address _user) external view returns (NftData[] memory) {
-        return myRentedNfts[_user];  // returns an array of all the nft hashes {maine kya kya dusro se rent kiya h}
+        uint totalItemCount = myRentedNfts[_user].length;
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        // Get all the NFTs in the myRentedNfts array
+
+        // Get the hashes and check if they are rented or not
+
+        // If not rented add to the array and then return
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (nftDetails[myRentedNfts[_user][i].nftHash].isRented == true) {
+                itemCount += 1;
+            }    
+        }
+
+        NftData[] memory items = new NftData[](itemCount);
+
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (nftDetails[myRentedNfts[_user][i].nftHash].isRented == true) {
+
+                NftData storage currentItem = nftDetails[myRentedNfts[_user][i].nftHash];
+
+                items[currentIndex] = currentItem;
+
+                currentIndex += 1;
+            }
+        }
+
+        return items;
     }
 
     function getNftDetailsByHash(string memory _nftHash) external view returns(NftData memory) {
@@ -85,6 +136,7 @@ contract NFTRent {
     function returnNft(string memory _nftHash, address _user) external {
         isRented[_user][_nftHash] = false;
         nftDetails[_nftHash].isRented = false;
+
         emit Returned(_nftHash, _user);
     }
 

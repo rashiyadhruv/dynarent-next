@@ -3,10 +3,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { ReactComponent as Revise } from "../../../../assets/revise.svg";
 import { DynarentContext } from "../../../../context/dynarentContext";
 import Link from "next/link";
+import { SuperfluidContext } from "../../../../context/superfluidContext";
 
 const Navbar = () => {
   const [address, setAddress] = useState("0");
   const { connectWallet, currentAccount } = useContext(DynarentContext);
+  const { streamstart } = useContext(SuperfluidContext);
 
   useEffect(() => {
     console.log("hello0", currentAccount);
@@ -28,16 +30,20 @@ const Navbar = () => {
           Your rented assets
         </Link>
         <div
+          className={styles.btn}
+          onClick={async () => {
+            await streamstart(
+              "1",
+              "0x9aCEcAF7e11BCbb9c114724FF8F51930e24f164b"
+            );
+          }}
+        >
+          exp
+        </div>
+        <div
           className={`${styles.btn} ${styles.connect}`}
           onClick={async () => {
             await connectWallet();
-            // console.log("hello", accounts);
-            // let addresss = accounts[0];
-            // setAddress(
-            //   `${currentAccount.toString().slice(0, 6)}...${currentAccount
-            //     .toString()
-            //     .slice(-4)}`
-            // );
           }}
         >
           {currentAccount === ""
