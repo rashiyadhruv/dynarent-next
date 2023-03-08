@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import axios from "axios";
 import DynarentContext from "../../../context/dynarentContext";
+import { SuperfluidContext } from "../../../context/superfluidContext";
 
 const Card = ({ handleSetState, nftData, type }) => {
   const {
@@ -26,6 +27,9 @@ const Card = ({ handleSetState, nftData, type }) => {
     rent,
     returnNft,
   } = useContext(DynarentContext);
+
+  const { update, streamdelete, sendNotification } =
+    useContext(SuperfluidContext);
 
   const router = useRouter();
   const path = router.pathname;
@@ -118,10 +122,7 @@ const Card = ({ handleSetState, nftData, type }) => {
             <p>Description: {apiResult.data?.description}</p>
             <p>TokenId: {nftData?.nftId}</p>
             <p>Chain: {nftData?.chainName}</p>
-            <p>
-              Init Flowrate:{" "}
-              {nftData?.initFlowrate?.toNumber() / (1000000000).toFixed(9)}
-            </p>
+            <p>Init Flowrate: {nftData?.initFlowrate?.toNumber()} Gwei</p>
             <p>Attribute in focus: Durablity </p>
             <p>Init Attribute Value: {nftData?.attribute?.toNumber()}</p>
 
@@ -134,8 +135,27 @@ const Card = ({ handleSetState, nftData, type }) => {
                 <button
                   className={styles.main_btn}
                   onClick={async () => {
-                    console.log("dfdfdf", nftData?.nftHash);
-                    await rent(nftData?.nftHash, currentAccount);
+                    // console.log("dfdfdf", nftData?.nftHash);
+                    // console.log(
+                    //   "rented",
+                    //   nftData?.initFlowrate.toNumber(),
+                    //   nftData?.attribute.toNumber(),
+                    //   nftData?.owner,
+                    //   currentAccount
+                    // );
+                    await rent(nftData?.nftHash, currentAccount).then(() => {
+                      sendNotification(
+                        nftData?.owner,
+                        "Your Item has been rented !!!!",
+                        `your ${nftData?.nftName} named asset has been rented by ${currentAccount}`
+                      );
+                      update(
+                        nftData?.initFlowrate.toNumber(),
+                        nftData?.attribute.toNumber(),
+                        nftData?.owner,
+                        currentAccount
+                      );
+                    });
                   }}
                 >
                   RENT
@@ -145,7 +165,17 @@ const Card = ({ handleSetState, nftData, type }) => {
                   className={styles.main_btn}
                   onClick={async () => {
                     console.log("dfdfdf", nftData?.nftHash, currentAccount);
-                    await returnNft(nftData?.nftHash, currentAccount);
+                    await returnNft(nftData?.nftHash, currentAccount).then(
+                      () => {
+                        sendNotification(
+                          nftData?.owner,
+                          "Your Item has been returned !!!!",
+                          `your ${nftData?.nftName} named asset has been returned by ${currentAccount}`
+                        );
+                        // streamdelete(nftData?.owner);
+                        console.log("returned");
+                      }
+                    );
                   }}
                 >
                   RETURN

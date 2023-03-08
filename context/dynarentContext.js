@@ -7,7 +7,7 @@ import { EvmChain } from "@moralisweb3/common-evm-utils";
 import ContractJson from "./dynarentJson.json";
 
 const abi = ContractJson.abi;
-const CONTRACT_ADDRESS = "0x31dA905e778FC5731c9ff858347E51111f8800D4";
+const CONTRACT_ADDRESS = "0x70AFe92485CCa57e8FAb0ad667aC6cE627886D0b";
 const MORALIS_API_KEY =
   "ea7RIctgYCrticyh409mE0xSQi8nby1hsbLkL4zfopadb6ett7i6mPTDfAeHRSRD";
 
@@ -38,7 +38,7 @@ export const DynarentProvider = ({ children }) => {
   const [nftAttributes, setNftAttributes] = useState([]);
   useEffect(() => {
     try {
-      console.log("checking wallet!!!!!!!!!!!!!!!!!!!!!!!");
+      // console.log("checking wallet!!!!!!!!!!!!!!!!!!!!!!!");
       // checkIfWalletIsConnect();
     } catch (error) {
       console.log(error);
@@ -46,7 +46,7 @@ export const DynarentProvider = ({ children }) => {
   }, []);
 
   const fetchNfts = async (address) => {
-    console.log("fetching nfts");
+    // console.log("fetching nfts");
     try {
       await Moralis.start({
         apiKey: MORALIS_API_KEY,
@@ -64,7 +64,7 @@ export const DynarentProvider = ({ children }) => {
         chain,
       });
       let item;
-      console.log(response.result);
+      // console.log(response.result);
 
       response.result.map((nft) => {
         item = {
@@ -84,7 +84,7 @@ export const DynarentProvider = ({ children }) => {
       allNFTs.push(response);
     }
 
-    console.log(allNFTs);
+    // console.log(allNFTs);
     setMyNfts(allNFTs);
     return allNFTs;
   };
@@ -106,9 +106,9 @@ export const DynarentProvider = ({ children }) => {
       // const web3Provider = await new ethers.BrowserProvider(window.ethereum);
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = await provider.getSigner();
-      console.log(signer);
+      // console.log(signer);
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-      console.log(contract);
+      // console.log(contract);
       const txRes = await contract.listToMarketplace(
         _nftHash,
         _nftAddress,
@@ -127,7 +127,7 @@ export const DynarentProvider = ({ children }) => {
       setLoading(true);
       await txRes.wait(1);
       setLoading(false);
-      console.log(txRes);
+      // console.log(txRes);
     }
   };
 
@@ -139,14 +139,14 @@ export const DynarentProvider = ({ children }) => {
       const signer = await provider.getSigner();
 
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-      console.log("calling", contract, _nftHash, _renter);
+      // console.log("calling", contract, _nftHash, _renter);
       const txRes = await contract.rent(_nftHash, _renter, {
         gasLimit: 5000000,
       });
-      console.log("feeeeeeeeee", txRes);
+      // console.log("feeeeeeeeee", txRes);
       setLoading(true);
       await txRes.wait(1);
-      console.log("feeeeeeeeee", txRes);
+      // console.log("feeeeeeeeee", txRes);
       setLoading(false);
 
       console.log(txRes);
@@ -165,11 +165,11 @@ export const DynarentProvider = ({ children }) => {
       const txRes = await contract.returnNft(_nftHash, _renter, {
         gasLimit: 5000000,
       });
-      console.log("asssssssssssss", txRes);
+      // console.log("asssssssssssss", txRes);
       setLoading(true);
       await txRes.wait(1);
       setLoading(false);
-      console.log(txRes);
+      // console.log(txRes);
     }
   };
 
@@ -180,11 +180,11 @@ export const DynarentProvider = ({ children }) => {
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-      console.log(contract);
+      // console.log(contract);
 
       const txRes = await contract.getMarketplaceNfts();
 
-      console.log(txRes);
+      // console.log(txRes);
       setMarketplaceNfts(txRes);
 
       return txRes;
@@ -199,9 +199,9 @@ export const DynarentProvider = ({ children }) => {
       const signer = await provider.getSigner();
 
       const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-      console.log("weee", _renter);
+      // console.log("weee", _renter);
       const txRes = await contract.getMyRentedNfts(_renter);
-      console.log("deeeeeee", txRes);
+      // console.log("deeeeeee", txRes);
 
       setRentedNfts(txRes);
       return txRes;
@@ -218,7 +218,7 @@ export const DynarentProvider = ({ children }) => {
 
       const txRes = await contract.getNftDetailsByHash(_nftHash);
 
-      console.log(txRes);
+      // console.log(txRes);
 
       return txRes;
     }
@@ -234,7 +234,7 @@ export const DynarentProvider = ({ children }) => {
 
       const txRes = await contract.verify(_nftHash, _renter);
 
-      console.log(txRes);
+      // console.log(txRes);
 
       return txRes;
     }
@@ -250,7 +250,7 @@ export const DynarentProvider = ({ children }) => {
 
       const txRes = await contract.getOwner();
 
-      console.log(txRes);
+      // console.log(txRes);
 
       return txRes;
     }
@@ -261,17 +261,17 @@ export const DynarentProvider = ({ children }) => {
   // Check if it is connected to wallet
   const checkIfWalletIsConnect = async () => {
     // While installing metamask, it has an ethereum object in the window
-    console.log("Connecting wallet avail...");
+    // console.log("Connecting wallet avail...");
 
     if (!window.ethereum) return alert("Please install MetaMask.");
 
     // Fetch all the eth accounts
     const accounts = await window.ethereum.request({ method: "eth_accounts" });
-    console.log("Connecting wallet availddddd...", accounts);
+    // console.log("Connecting wallet availddddd...", accounts);
     // Connecting account if exists
     if (accounts.length) {
       setCurrentAccount(accounts[0]);
-      console.log("Connected wallet hehehehhehe", accounts);
+      // console.log("Connected wallet hehehehhehe", accounts);
     } else {
       console.log("No accounts found");
     }
@@ -279,7 +279,7 @@ export const DynarentProvider = ({ children }) => {
 
   // Connect wallet
   const connectWallet = async () => {
-    console.log("Connecting wallet...");
+    // console.log("Connecting wallet...");
     checkIfWalletIsConnect();
     if (!window.ethereum) return alert("Please install MetaMask.");
 
@@ -291,7 +291,7 @@ export const DynarentProvider = ({ children }) => {
     // Connecting account if exists
     if (accounts.length) {
       setCurrentAccount(accounts[0]);
-      console.log("Connected wallet hehehehhehe", accounts);
+      // console.log("Connected wallet hehehehhehe", accounts);
     } else {
       console.log("No accounts found");
     }

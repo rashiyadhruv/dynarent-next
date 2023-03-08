@@ -16,20 +16,20 @@ const Marketplace = () => {
   } = useContext(DynarentContext);
 
   useEffect(() => {
-    console.log("hellll", currentAccount);
+    // console.log("hellll", currentAccount);
     if (currentAccount === "") {
       connectWallet();
     } else {
-      console.log("getting marketplace nfts");
+      // console.log("getting marketplace nfts");
       getMarketplaceNfts();
     }
   }, [currentAccount]);
 
   return (
     <div className={styles.marketplace}>
-      {console.log("marketplaceNfts", marketplaceNfts)}
+     
       {marketplaceNfts.map((nft, index) =>
-        nft.isRented === false ? (
+        index === 0 ? (
           <Card
             handleSetState={() => {
               setCardId(index);

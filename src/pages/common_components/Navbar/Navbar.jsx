@@ -8,7 +8,7 @@ import { SuperfluidContext } from "../../../../context/superfluidContext";
 const Navbar = () => {
   const [address, setAddress] = useState("0");
   const { connectWallet, currentAccount } = useContext(DynarentContext);
-  const { streamstart } = useContext(SuperfluidContext);
+  const { streamstart, streamdelete } = useContext(SuperfluidContext);
 
   useEffect(() => {
     console.log("hello0", currentAccount);
@@ -29,17 +29,14 @@ const Navbar = () => {
         <Link className={styles.btn} href="/rentedassets">
           Your rented assets
         </Link>
-        <div
+        {/* <div
           className={styles.btn}
           onClick={async () => {
-            await streamstart(
-              "1",
-              "0x9aCEcAF7e11BCbb9c114724FF8F51930e24f164b"
-            );
+            await streamdelete(currentAccount);
           }}
         >
           exp
-        </div>
+        </div> */}
         <div
           className={`${styles.btn} ${styles.connect}`}
           onClick={async () => {

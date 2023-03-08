@@ -2,28 +2,26 @@ import React, { createContext, useEffect } from "react";
 import { useState } from "react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-// import hre from "hardhat";
 const { Framework } = require("@superfluid-finance/sdk-core");
-// const { ethersssss } = require("hardhat");
 const MoneyRouterABI = require("./MoneyRouter.json").abi;
 const { key, collectionId, PK } = require("./config.js");
 const { Revise } = require("revise-sdk");
 const revise = new Revise({ auth: key });
 const PushAPI = require("@pushprotocol/restapi");
-
 const etherss = require("ethers");
-
 const Pkey = `0x${PK}`;
-
-const initflowrate = 1000000000000;
 const receiveraddress = "0x9aCEcAF7e11BCbb9c114724FF8F51930e24f164b";
-
-//
+const nft_id = "73544e46-d67f-4268-ac13-daeecd97d5e1";
 export const SuperfluidContext = React.createContext();
 
 export const SuperfluidProvider = ({ children }) => {
-  const [notifaddress, setNotifaddress] = useState();
+  const [notifaddress, setNotifaddress] = useState("");
 
+  let receiveradd = "";
+  let currentaddress = "";
+  let initflowrate = 0;
+  let initattribute = 0;
+  let lastdura = 0;
   const sendNotification = async (address, title, body) => {
     const signer = new etherss.Wallet(Pkey);
 
@@ -48,7 +46,7 @@ export const SuperfluidProvider = ({ children }) => {
       });
 
       // apiResponse?.status === 204, if sent successfully!
-      console.log("API repsonse: ", apiResponse);
+      // console.log("API repsonse: ", apiResponse);
     } catch (err) {
       console.error("Error: ", err);
     }
@@ -56,28 +54,11 @@ export const SuperfluidProvider = ({ children }) => {
 
   async function streamstart(rate, recaddress) {
     const moneyRouterAddress = "0x6cE360db8Cb15d3D963608A0675CF67862311043";
-    // const receiver = recaddress;
 
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
-    // const web3Provider = await new ethers.BrowserProvider(window.ethereum);
     const provider = new ethers.providers.Web3Provider(connection);
     let signers = await provider.getSigner();
-    // let addsigners = await fsigners.getAddress();
-
-    // let signers = {
-    //   ...fsigners,
-    //   _address: addsigners,
-    // };
-    // console.log(
-    //   "provider",
-    //   provider,
-    //   "signers",
-    //   signers,
-    //   fsigners,
-    //   "sdsdfsdfsdf",
-    //   ffsigner
-    // );
 
     const sf = await Framework.create({
       chainId: (await provider.getNetwork()).chainId,
@@ -96,7 +77,7 @@ export const SuperfluidProvider = ({ children }) => {
     await moneyRouter
       .connect(signers)
       .createFlowFromContract(daix.address, recaddress, rate, {
-        gasLimit: 1000000,
+        gasLimit: 5000000,
       })
       .then(function (tx) {
         console.log(`
@@ -107,7 +88,7 @@ export const SuperfluidProvider = ({ children }) => {
 
     await moneyRouter
       .connect(signers)
-      .createFlowIntoContract(daix.address, rate, { gasLimit: 1000000 })
+      .createFlowIntoContract(daix.address, rate, { gasLimit: 5000000 })
       .then(function (tx) {
         console.log(`
          Congrats! You just successfully created a flow into the money router contract.
@@ -119,18 +100,15 @@ export const SuperfluidProvider = ({ children }) => {
   async function streamupdate(rate, recaddress) {
     const moneyRouterAddress = "0x6cE360db8Cb15d3D963608A0675CF67862311043";
 
-    const receiver = recaddress;
-
-    const provider = new hre.ethers.providers.JsonRpcProvider(
-      process.env.GOERLI_URL
-    );
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    let signers = await provider.getSigner();
 
     const sf = await Framework.create({
       chainId: (await provider.getNetwork()).chainId,
       provider,
     });
-    const signers = await hre.ethers.getSigners();
-
     const moneyRouter = new ethers.Contract(
       moneyRouterAddress,
       MoneyRouterABI,
@@ -141,8 +119,10 @@ export const SuperfluidProvider = ({ children }) => {
     // console.log("daix", daix);
 
     await moneyRouter
-      .connect(signers[0])
-      .updateFlowFromContract(daix.address, receiver, rate)
+      .connect(signers)
+      .updateFlowFromContract(daix.address, recaddress, rate, {
+        gasLimit: 5000000,
+      })
       .then(function (tx) {
         console.log(`
           Congrats! You just successfully updated a flow from the money router contract. 
@@ -151,8 +131,8 @@ export const SuperfluidProvider = ({ children }) => {
       });
 
     await moneyRouter
-      .connect(signers[0])
-      .updateFlowIntoContract(daix.address, rate)
+      .connect(signers)
+      .updateFlowIntoContract(daix.address, rate, { gasLimit: 5000000 })
       .then(function (tx) {
         console.log(`
         Congrats! You just successfully updated a flow into the money router contract. 
@@ -164,17 +144,15 @@ export const SuperfluidProvider = ({ children }) => {
   async function streamdelete(recaddress) {
     const moneyRouterAddress = "0x6cE360db8Cb15d3D963608A0675CF67862311043";
 
-    const receiver = recaddress;
-
-    const provider = new hre.ethers.providers.JsonRpcProvider(
-      process.env.GOERLI_URL
-    );
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    let signers = await provider.getSigner();
 
     const sf = await Framework.create({
       chainId: (await provider.getNetwork()).chainId,
       provider,
     });
-    const signers = await hre.ethers.getSigners();
 
     const moneyRouter = new ethers.Contract(
       moneyRouterAddress,
@@ -188,8 +166,8 @@ export const SuperfluidProvider = ({ children }) => {
     // call money router delete flow into contract method from signers[0]
     //   this flow rate is ~1000 tokens/month
     await moneyRouter
-      .connect(signers[0])
-      .deleteFlowFromContract(daix.address, receiver)
+      .connect(signers)
+      .deleteFlowFromContract(daix.address, recaddress, { gasLimit: 5000000 })
       .then(function (tx) {
         console.log(`
           Congrats! You just successfully deleted a flow from the money router contract. 
@@ -200,8 +178,8 @@ export const SuperfluidProvider = ({ children }) => {
     // call money router delete flow into contract method from signers[0]
     // this flow rate is ~2000 tokens/month
     await moneyRouter
-      .connect(signers[0])
-      .deleteFlowIntoContract(daix.address)
+      .connect(signers)
+      .deleteFlowIntoContract(daix.address, { gasLimit: 5000000 })
       .then(function (tx) {
         console.log(`
           Congrats! You just successfully delete a flow that was being sent into the money router contract. 
@@ -239,30 +217,36 @@ export const SuperfluidProvider = ({ children }) => {
 
   async function API() {
     let revisions = await revise.fetchRevisions(nft_id);
-    let dura1 = revisions?.revisions[0]?.metaData[1]?.durablity;
-    let dura2 = revisions?.revisions[1]?.metaData[1]?.durablity;
-    let initdura = 100;
+    let dura1 = parseInt(revisions?.revisions[0]?.metaData[1]?.durablity);
+    let dura2 = parseInt(revisions?.revisions[1]?.metaData[1]?.durablity);
+    let initdura = parseInt(initattribute);
 
-    // streamdelete(receiveraddress);
-    // sendNotification("0x1d0923340a6c3A53f6E99d4C3EAE0b47B41c5880" , "stream deleted" , `flowrate is 0`);
+    // console.log(initattribute, initflowrate, receiveradd);
+    // console.log("fduuuuuuuuudf", dura1, dura2, initdura, lastdura);
 
-    if (dura1 < dura2 && dura2 < 100) {
+    // console.log("dura1 npt equal last", dura1 !== lastdura);
+    // console.log("dura1 less than dura2", dura1 < dura2);
+    // console.log("dura2 less than initdura", dura2 < initdura);
+
+    if (dura1 < dura2 && dura2 < initdura && dura1 !== lastdura) {
       console.log("durablity is reduced : updating streame");
+      lastdura = dura1;
       let newflowrate = updateflowrate(initdura, dura1, initflowrate, "linear");
       console.log("new flow rate", newflowrate);
-      streamupdate(newflowrate.toString(), receiveraddress);
+      streamupdate(newflowrate.toString(), receiveradd);
       sendNotification(
-        "0x1d0923340a6c3A53f6E99d4C3EAE0b47B41c5880",
+        currentaddress,
         "flowrate updated",
-        `flowrate is updated to ${newflowrate}`
+        `flowrate is updated to ${newflowrate / 1000000} Gwei/sec`
       );
-    } else if (dura1 < dura2 && dura2 == 100) {
+    } else if (dura1 < dura2 && dura2 == initdura && dura1 !== lastdura) {
       console.log("durablity is reduced for the first time : starting streame");
-      streamstart(initflowrate.toString(), receiveraddress);
+      lastdura = dura1;
+      streamstart(initflowrate.toString(), receiveradd);
       sendNotification(
-        "0x1d0923340a6c3A53f6E99d4C3EAE0b47B41c5880",
+        currentaddress,
         "stream started",
-        `flowrate is currently ${initflowrate}`
+        `flowrate is currently ${initflowrate / 1000000} Gwei/sec`
       );
     } else {
       console.log("durablity is constant : not updating streame");
@@ -294,17 +278,29 @@ export const SuperfluidProvider = ({ children }) => {
     console.log(res);
   }
 
-  async function update() {
+  async function update(
+    initflowratee,
+    initattributee,
+    receiveraddresss,
+    currentaddresss
+  ) {
     const res = await revise.fetchNFT("73544e46-d67f-4268-ac13-daeecd97d5e1");
-    // console.log(res);
+
+    initattribute = initattributee;
+    initflowrate = initflowratee * 1000000;
+    receiveradd = receiveraddresss.toString();
+    currentaddress = currentaddresss.toString();
+    lastdura = parseInt(initattribute);
+
     const nft = revise.nft(res);
-    await nft.setProperty("durablity", 98).save();
-    revise
-      .every("30s")
-      .listenTo(API)
-      .start(async (data) => {
-        await nft.setProperty("damage", 200).save();
-      });
+    setTimeout(() => {
+      revise
+        .every("10s")
+        .listenTo(API)
+        .start(async (data) => {
+          console.log("data");
+        });
+    }, 1000);
   }
 
   return (

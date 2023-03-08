@@ -35,7 +35,7 @@ const FormModal = () => {
     const func = async () => {
       const data = await axios.get(tokenUri);
       setAttributes(data?.data?.attributes);
-      console.log(data?.data?.attributes);
+      // console.log(data?.data?.attributes);
       setAttvalue(data?.data?.attributes[1]?.value);
     };
     func();
@@ -163,7 +163,7 @@ const FormModal = () => {
               id="name"
               className={styles.main_content_form_input}
               placeholder="0"
-              onChange={(e) => setInitflow(e.target.value * 1000000000)}
+              onChange={(e) => setInitflow(e.target.value)}
             />
           </div>
 
